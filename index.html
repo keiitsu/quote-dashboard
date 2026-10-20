@@ -97,6 +97,31 @@ label.f small{font-weight:400;color:#94a3b8;font-size:11px}
 .easy{margin-top:8px;background:#e9f9ef;border-radius:8px;padding:6px 10px;color:#05863b;font-weight:700}
 .grp{margin:14px 0 2px;font-size:12.5px;font-weight:800;color:#1f4e78;border-bottom:1px dashed #d5deea;padding-bottom:3px}
 button.mini{margin-top:6px;font-size:11.5px;padding:5px 9px;background:#fff8e1;border-color:#f0d78c}
+/* compact ② */
+.grid{align-items:stretch}.grid>div{display:flex;flex-direction:column}.grid>div>.card{flex:1}
+#paramCard{padding:12px 16px}
+#paramCard h2{margin-bottom:6px}
+#paramCard h2 .easy{margin:0 0 0 auto;font-size:12px;padding:3px 10px;border-radius:99px}
+#paramCard .intro{padding:6px 10px;font-size:12px;margin-bottom:8px}
+#paramCard .intro summary{cursor:pointer;list-style:none}
+#paramCard .intro summary::-webkit-details-marker{display:none}
+#paramCard .intro .more{color:var(--brand2);text-decoration:underline;margin-left:6px;font-size:11.5px}
+.pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 14px}
+.pgrid .fld{margin:0;padding:6px 8px;border:1px solid #edf1f6;border-radius:8px;background:#fcfdfe}
+.pgrid label.f{margin:0 0 3px;font-size:12px;color:#1f4e78;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pgrid input,.pgrid select{padding:4px 8px;font-size:13px;height:30px}
+.pgrid .zh{font-size:11px;padding:2px 7px}
+.pgrid .fh{font-size:11px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pgrid button.mini{margin-top:4px;font-size:11px;padding:2px 8px}
+.pgrid .ptbl{margin-top:4px}.pgrid .ptbl th,.pgrid .ptbl td{padding:3px 5px;font-size:11.5px}.pgrid .ptbl input{width:72px;height:26px}
+.scen-d summary{cursor:pointer}
+.tip{position:relative;display:inline-block;color:var(--brand2);cursor:help;font-weight:400;font-size:12px;outline:none}
+.tip:hover::after,.tip:focus::after{content:attr(data-tip);position:absolute;left:50%;top:120%;transform:translateX(-50%);z-index:30;width:250px;white-space:normal;background:#1d2a3a;color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.2);font-weight:400}
+.pgrid label.f:has(.tip:hover),.pgrid label.f:has(.tip:focus){overflow:visible}
+#paramCard #charHint{margin-top:6px}
+@media (max-width:1200px){.pgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:900px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.pgrid{grid-template-columns:1fr}.pgrid .fh{white-space:normal}#paramCard h2 .easy{margin-left:0}main{padding:12px 10px 30px}.kpis{grid-template-columns:1fr 1fr}.tip:hover::after,.tip:focus::after{left:0;transform:none;width:220px}}
 </style>
 </head>
 <body>
@@ -145,32 +170,6 @@ button.mini{margin-top:6px;font-size:11.5px;padding:5px 9px;background:#fff8e1;b
           <div class="hint">輸入每月大約回覆幾則，系統用「每則成本 × 則數」算出單一金額。</div>
         </div>
       </div>
-      <div class="card" id="paramCard">
-        <h2>② 估算設定 <span class="tag">黃色欄位可修改</span></h2>
-        <div class="intro"><b>這是什麼？</b>AI 是照「每次讀了多少字＋回了多少字」收費的。下面這些數字用來估算「AI 每回一則訊息要花多少錢」。<br>表格裡的 <b>token</b> 是 AI 計算字量的單位，可以想成「字數」：<b>1 個中文字 ≈ 1.2 token</b>，右邊會自動顯示約等於幾個中文字。
-        <div class="easy">👉 看不懂就用預設值！預設值已是一般小店的合理設定，不用改也能報價。</div></div>
-        <div class="grp">每則訊息的字量</div>
-        <div class="fld"><label class="f">AI 的工作說明書長度 <small>（系統提示詞）</small></label><div class="inrow"><input class="y" type="number" min="0" data-p="sys"><span class="zh" data-zh="sys"></span></div><div class="fh">每次回覆前，AI 都要先讀一遍「店家介紹＋回答規則」。<b>預設 400</b>（約 330 字）。店家資料、規則很多時再調高；寫越長越貴。</div></div>
-        <div class="fld"><label class="f">AI 要記住的前面聊天內容 <small>（對話歷史）</small></label><div class="inrow"><input class="y" type="number" min="0" data-p="hist"><span class="zh" data-zh="hist"></span></div><div class="fh">讓 AI 記得前面聊過什麼，回答才接得上。<b>預設 300</b>（約 250 字，大約最近 3～5 句）。希望 AI 記得更多前文才調高。</div></div>
-        <div class="fld"><label class="f">客人每次傳來的訊息長度 <small>（使用者訊息）</small></label><div class="inrow"><input class="y" type="number" min="0" data-p="user"><span class="zh" data-zh="user"></span></div><div class="fh">客人一次通常只打一兩句話。<b>預設 100</b>（約 80 字），一般不用改。</div></div>
-        <div class="fld"><label class="f">AI 每次要讀的總字量 <small>（自動加總）</small></label><div class="inrow"><input id="inTok" disabled><span class="zh" data-zh="in"></span></div><div class="fh">= 說明書＋聊天記憶＋客人訊息，系統自動加總，不用填。</div></div>
-        <div class="fld"><label class="f">AI 每次回覆的長度 <small>（輸出 tokens）</small></label><div class="inrow"><input class="y" type="number" min="0" data-p="out"><span class="zh" data-zh="out"></span></div><div class="fh">AI 回給客人的字數，回覆字量比讀取貴好幾倍。<b>預設 250</b>（約 210 字，約 2～4 段短文）。希望回答精簡可調低。</div></div>
-        <div class="grp">省錢與保險設定</div>
-        <div class="fld"><label class="f">重複內容省錢比例（%） <small>（快取命中比例）</small></label><div class="inrow"><input class="y" type="number" min="0" max="100" data-p="cache" data-pct="1"></div><div class="fh">每次都一樣的內容（如說明書），AI 可用約一折的價格重複讀取。<b>預設 0</b>（不算折扣，最保守）。確定有開啟這項省錢功能，再填大概比例，例如 50。</div></div>
-        <div class="fld"><label class="f">多估一點的保險倍數 <small>（token 調整係數）</small></label><div class="inrow"><input class="y" type="number" step="0.05" min="0" data-p="factor"></div><div class="fh">不同 AI 算字方式略有差異。<b>預設 1</b>（不加估）；想保守報價可填 1.3，代表費用多估 30%。</div></div>
-        <div class="fld"><label class="f">多少 token 算 1 個中文字 <small>（中文字↔token 比例）</small></label><div class="inrow"><input class="y" type="number" step="0.1" min="0.1" data-p="cpt"></div><div class="fh">只用來把 token 換算成右邊顯示的「約幾個字」，<b>不影響金額</b>。<b>預設 1.2</b>，一般不用改。</div></div>
-        <div class="grp">匯率與價格</div>
-        <div class="fld"><label class="f">美元匯率（1 美元 = 幾元台幣） <small>（TWD/USD）</small></label><div class="inrow"><input class="y" type="number" step="0.001" min="0" data-p="fx"></div><div class="fh">AI 費用是用美元計價，再換算成台幣。<b>預設 32.515</b>（臺灣銀行 2026/10/19 即期賣出）。匯率變動明顯時再更新。<br><button id="btnFxBuf" type="button" class="mini">匯率加 1.5%（客戶用信用卡付美元時，銀行會多收約 1.5% 手續費）</button></div></div>
-        <div class="fld"><label class="f">Google Gemini 用漲價後的價格估算？ <small>（Gemini 調價）</small></label><div class="inrow"><select data-p="gemAdj"><option>否</option><option>是</option></select></div><div class="fh">Gemini 4 Argon 於 2026/12/1、Gemini 3.8 Flash 於 2027/1/1 起價格加倍。<b>預設「否」</b>；報價期間會跨過漲價日就選「是」。沒用 Gemini 可忽略。</div></div>
-        <div class="grp">LINE 訊息</div>
-        <div class="fld"><label class="f">店家主動傳訊息的比例（%） <small>（Push 比例）</small></label><div class="inrow"><input class="y" type="number" min="0" max="100" data-p="push" data-pct="1"></div><div class="fh">「客人問、機器人答」是<b>免費</b>的；只有店家<b>主動傳</b>（通知、提醒、AI 太慢改成補傳）才會扣 LINE 則數。<b>預設 0</b>（全部用回覆，LINE 免費）。會主動通知客人時，填大約佔幾成，例如 10。</div></div>
-        <div class="hint" id="charHint"></div>
-        <details style="margin-top:10px"><summary style="cursor:pointer;font-size:13px;color:var(--brand2)">每月回覆則數範圍（6 種店家規模，可調整）</summary>
-          <div class="fh" style="margin-top:6px">「情境」就是依店家每月大約會收到多少則客人訊息來分級。下限、上限分別用來算最低和最高月費；<b>一般不用改</b>，客戶規模特殊時再調整。</div>
-          <table class="ptbl" style="margin-top:8px"><thead><tr><th>店家規模</th><th class="n">每月最少（則）</th><th class="n">每月最多（則）</th></tr></thead><tbody id="scenEdit"></tbody></table>
-          <div class="hint">情境6 沒有上限，最多則數只是估算用（預設 200,000）。</div>
-        </details>
-      </div>
     </div>
     <div>
       <div class="card" id="quoteCard">
@@ -180,7 +179,31 @@ button.mini{margin-top:6px;font-size:11.5px;padding:5px 9px;background:#fff8e1;b
         <div class="note red"><b>串接客戶現有系統</b>（例如 POS 收銀、訂單、預約、會員系統，技術上稱「API 串接」）：要等客戶提供系統的串接文件（API 規格）後，才能評估工時與費用，所以本報價先不列金額。</div>
         <div class="note" id="quoteNotes"></div>
       </div>
-      <div class="charts">
+    </div>
+  </section>
+  <section class="card" id="paramCard">
+    <h2>② 估算設定 <span class="tag">黃色欄位可修改</span> <span class="easy">👉 看不懂就用預設值</span></h2>
+    <details class="intro"><summary><b>這是什麼？</b> AI 依「每次讀＋回的字量」收費；token ≈ 字數（1 個中文字 ≈ 1.2 token）。<span class="more">看說明</span></summary>
+      下面數字用來估算「AI 每回一則訊息要花多少錢」。綠色標籤會把 token 自動換算成大約的中文字數。滑過或點一下 ⓘ 可看每個欄位的完整說明。預設值已是一般小店的合理設定，不用改也能報價。</details>
+    <div class="pgrid">
+      <div class="fld"><label class="f">AI 的工作說明書長度 <span class="tip" tabindex="0" data-tip="系統提示詞：每次回覆前 AI 都要先讀一遍「店家介紹＋回答規則」。店家資料、規則很多時再調高；寫越長越貴。">ⓘ</span></label><div class="inrow"><input class="y" type="number" min="0" data-p="sys"><span class="zh" data-zh="sys"></span></div><div class="fh">店家介紹＋回答規則｜預設 400</div></div>
+      <div class="fld"><label class="f">AI 記住的前面聊天 <span class="tip" tabindex="0" data-tip="對話歷史：讓 AI 記得前面聊過什麼，回答才接得上。預設約最近 3～5 句；希望 AI 記得更多前文才調高。">ⓘ</span></label><div class="inrow"><input class="y" type="number" min="0" data-p="hist"><span class="zh" data-zh="hist"></span></div><div class="fh">約最近 3～5 句｜預設 300</div></div>
+      <div class="fld"><label class="f">客人每次傳來的長度 <span class="tip" tabindex="0" data-tip="使用者訊息：客人一次通常只打一兩句話，一般不用改。">ⓘ</span></label><div class="inrow"><input class="y" type="number" min="0" data-p="user"><span class="zh" data-zh="user"></span></div><div class="fh">通常一兩句｜預設 100</div></div>
+      <div class="fld"><label class="f">AI 每次要讀的總字量 <span class="tip" tabindex="0" data-tip="自動加總＝說明書＋聊天記憶＋客人訊息，不用填。">ⓘ</span></label><div class="inrow"><input id="inTok" disabled><span class="zh" data-zh="in"></span></div><div class="fh">以上三項自動加總</div></div>
+      <div class="fld"><label class="f">AI 每次回覆的長度 <span class="tip" tabindex="0" data-tip="輸出 tokens：AI 回給客人的字數，回覆字量比讀取貴好幾倍。預設約 2～4 段短文；希望回答精簡可調低。">ⓘ</span></label><div class="inrow"><input class="y" type="number" min="0" data-p="out"><span class="zh" data-zh="out"></span></div><div class="fh">約 2～4 段短文｜預設 250</div></div>
+      <div class="fld"><label class="f">重複內容省錢比例（%） <span class="tip" tabindex="0" data-tip="快取命中比例：每次都一樣的內容（如說明書），AI 可用約一折的價格重複讀取。預設 0＝不算折扣、最保守；確定有開啟這項功能再填，例如 50。">ⓘ</span></label><div class="inrow"><input class="y" type="number" min="0" max="100" data-p="cache" data-pct="1"></div><div class="fh">有開省錢功能才填｜預設 0</div></div>
+      <div class="fld"><label class="f">多估一點的保險倍數 <span class="tip" tabindex="0" data-tip="token 調整係數：不同 AI 算字方式略有差異。預設 1＝不加估；想保守報價可填 1.3，代表費用多估 30%。">ⓘ</span></label><div class="inrow"><input class="y" type="number" step="0.05" min="0" data-p="factor"></div><div class="fh">保守報價填 1.3｜預設 1</div></div>
+      <div class="fld"><label class="f">多少 token 算 1 個中文字 <span class="tip" tabindex="0" data-tip="中文字↔token 比例：只用來換算綠色標籤的「約幾個字」，不影響金額。一般不用改。">ⓘ</span></label><div class="inrow"><input class="y" type="number" step="0.1" min="0.1" data-p="cpt"></div><div class="fh">只影響字數顯示｜預設 1.2</div></div>
+      <div class="fld"><label class="f">美元匯率（1 美元＝幾元台幣） <span class="tip" tabindex="0" data-tip="TWD/USD：AI 費用以美元計價再換成台幣。預設為臺灣銀行 2026/10/19 即期賣出 32.515；匯率變動明顯時再更新。客戶用信用卡付美元時銀行約多收 1.5%，可按下方按鈕加上。">ⓘ</span></label><div class="inrow"><input class="y" type="number" step="0.001" min="0" data-p="fx"></div><div class="fh">預設 32.515（臺銀 10/19）</div><button id="btnFxBuf" type="button" class="mini">＋1.5% 信用卡手續費</button></div>
+      <div class="fld"><label class="f">Gemini 用漲價後價格？ <span class="tip" tabindex="0" data-tip="Gemini 4 Argon 於 2026/12/1、Gemini 3.8 Flash 於 2027/1/1 起價格加倍。報價期間會跨過漲價日就選「是」；沒用 Gemini 可忽略。">ⓘ</span></label><div class="inrow"><select data-p="gemAdj"><option>否</option><option>是</option></select></div><div class="fh">跨過漲價日選「是」｜預設 否</div></div>
+      <div class="fld"><label class="f">店家主動傳訊息比例（%） <span class="tip" tabindex="0" data-tip="Push 比例：「客人問、機器人答」免費；只有店家主動傳（通知、提醒、AI 太慢改成補傳）才扣 LINE 則數。會主動通知客人時，填大約佔幾成，例如 10。">ⓘ</span></label><div class="inrow"><input class="y" type="number" min="0" max="100" data-p="push" data-pct="1"></div><div class="fh">回覆免費、主動傳才計費｜預設 0</div></div>
+      <div class="fld"><details class="scen-d"><summary><label class="f" style="display:inline;cursor:pointer">每月回覆則數範圍 <span class="tip" tabindex="0" data-tip="「情境」依店家每月大約收到多少則客人訊息分級；最少／最多分別用來算最低和最高月費。情境6 沒有上限，最多則數只是估算用（預設 200,000）。">ⓘ</span></label></summary>
+        <table class="ptbl"><thead><tr><th>規模</th><th class="n">最少</th><th class="n">最多</th></tr></thead><tbody id="scenEdit"></tbody></table></details>
+        <div class="fh">6 種店家規模｜一般不用改（點開調整）</div></div>
+    </div>
+    <div class="hint" id="charHint"></div>
+  </section>
+  <section class="charts">
         <div class="card">
           <h2>各 AI 模型：每回一則訊息要多少錢（台幣） <label class="chk noprint" style="margin:0 0 0 auto;font-weight:400;color:var(--muted)"><input type="checkbox" id="logScale">對數刻度</label></h2>
           <div class="legend"><span><i style="background:var(--oa)"></i>OpenAI</span><span><i style="background:var(--an)"></i>Anthropic</span><span><i style="background:var(--go)"></i>Google</span><span>點長條可直接換模型</span></div>
@@ -192,8 +215,6 @@ button.mini{margin-top:6px;font-size:11.5px;padding:5px 9px;background:#fff8e1;b
           <div id="chartScen"></div>
           <div id="chartDonut" style="margin-top:6px"></div>
         </div>
-      </div>
-    </div>
   </section>
   <section id="tabsArea">
     <div class="tabs" id="tabs">
