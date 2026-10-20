@@ -126,6 +126,7 @@ button.mini{margin-top:6px;font-size:11.5px;padding:5px 9px;background:#fff8e1;b
 .kpis{grid-template-columns:repeat(7,1fr);gap:10px}
 .kpi{padding:10px 12px}.kpi .v{font-size:17px}
 .ratebar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:12.5px;margin:8px 0 10px;background:#f7f9fc;border-radius:8px;padding:8px 10px}
+.ratebar .ro{display:inline-block;min-width:58px;padding:3px 8px;background:#eef2f7;border:1px solid #d5dde8;border-radius:6px;font-variant-numeric:tabular-nums}
 .ratebar input{width:86px;padding:4px 6px;height:28px}
 .htbl td,.htbl th{font-size:12px;padding:5px 7px}
 .htbl td{white-space:normal;min-width:70px}
@@ -215,7 +216,7 @@ button.mini{margin-top:6px;font-size:11.5px;padding:5px 9px;background:#fff8e1;b
       <div class="fld"><label class="f">重複內容省錢比例（%） <span class="tip" tabindex="0" data-tip="快取命中比例：每次都一樣的內容（如說明書），AI 可用約一折的價格重複讀取。預設 0＝不算折扣、最保守；確定有開啟這項功能再填，例如 50。">ⓘ</span></label><div class="inrow"><input class="y" type="number" min="0" max="100" data-p="cache" data-pct="1"></div><div class="fh">有開省錢功能才填｜預設 0</div></div>
       <div class="fld"><label class="f">多估一點的保險倍數 <span class="tip" tabindex="0" data-tip="token 調整係數：不同 AI 算字方式略有差異。預設 1＝不加估；想保守報價可填 1.3，代表費用多估 30%。">ⓘ</span></label><div class="inrow"><input class="y" type="number" step="0.05" min="0" data-p="factor"></div><div class="fh">保守報價填 1.3｜預設 1</div></div>
       <div class="fld"><label class="f">多少 token 算 1 個中文字 <span class="tip" tabindex="0" data-tip="中文字↔token 比例：只用來換算綠色標籤的「約幾個字」，不影響金額。一般不用改。">ⓘ</span></label><div class="inrow"><input class="y" type="number" step="0.1" min="0.1" data-p="cpt"></div><div class="fh">只影響字數顯示｜預設 1.2</div></div>
-      <div class="fld"><label class="f">美元匯率（1 美元＝幾元台幣） <span class="tip" tabindex="0" data-tip="TWD/USD：AI 費用以美元計價再換成台幣。預設為臺灣銀行 2026/10/19 即期賣出 32.515；匯率變動明顯時再更新。客戶用信用卡付美元時銀行約多收 1.5%，可按下方按鈕加上。">ⓘ</span></label><div class="inrow"><input class="y" type="number" step="0.001" min="0" data-p="fx"></div><div class="fh">預設 32.515（臺銀 10/19）</div><button id="btnFxBuf" type="button" class="mini">＋1.5% 信用卡手續費</button></div>
+      <div class="fld"><label class="f">美元匯率（1 美元＝幾元台幣） <span class="tip" tabindex="0" data-tip="TWD/USD：AI 費用與美元計價的主機月費都用這個匯率換成台幣。預設為臺灣銀行 2026/10/19 即期賣出 32.515；匯率變動明顯時再更新。客戶用信用卡付美元時銀行約多收 1.5%，可按下方按鈕加上。">ⓘ</span></label><div class="inrow"><input class="y" type="number" step="0.001" min="0" data-p="fx"></div><div class="fh">預設 32.515（臺銀 10/19）；AI 與主機共用</div><button id="btnFxBuf" type="button" class="mini">＋1.5% 信用卡手續費</button></div>
       <div class="fld"><label class="f">Gemini 用漲價後價格？ <span class="tip" tabindex="0" data-tip="Gemini 4 Argon 於 2026/12/1、Gemini 3.8 Flash 於 2027/1/1 起價格加倍。報價期間會跨過漲價日就選「是」；沒用 Gemini 可忽略。">ⓘ</span></label><div class="inrow"><select data-p="gemAdj"><option>否</option><option>是</option></select></div><div class="fh">跨過漲價日選「是」｜預設 否</div></div>
       <div class="fld"><label class="f">店家主動傳訊息比例（%） <span class="tip" tabindex="0" data-tip="Push 比例：「客人問、機器人答」免費；只有店家主動傳（通知、提醒、AI 太慢改成補傳）才扣 LINE 則數。會主動通知客人時，填大約佔幾成，例如 10。">ⓘ</span></label><div class="inrow"><input class="y" type="number" min="0" max="100" data-p="push" data-pct="1"></div><div class="fh">回覆免費、主動傳才計費｜預設 0</div></div>
       <div class="fld"><details class="scen-d"><summary><label class="f" style="display:inline;cursor:pointer">每月回覆則數範圍 <span class="tip" tabindex="0" data-tip="「情境」依店家每月大約收到多少則客人訊息分級；最少／最多分別用來算最低和最高月費。情境6 沒有上限，最多則數只是估算用（預設 200,000）。">ⓘ</span></label></summary>
@@ -261,7 +262,7 @@ button.mini{margin-top:6px;font-size:11.5px;padding:5px 9px;background:#fff8e1;b
     <div class="card tab" id="tab-line"><h2>LINE 官方帳號（台灣）方案與訊息則數</h2><div id="lineWrap"></div></div>
     <div class="card tab" id="tab-method"><h2>計算方式</h2><div id="methodWrap"></div><h2 style="margin-top:18px">給小型客戶的建議</h2><ol class="tips" id="tipsWrap"></ol></div>
     <div class="card tab" id="tab-host"><h2 id="hostTitle"></h2><div class="fh" id="hostSub"></div>
-      <div class="ratebar"><span>主機用匯率：</span><label>1 美元 = <input class="y" type="number" step="0.01" min="0" id="rateUsd"> 元</label><label>1 歐元 = <input class="y" type="number" step="0.01" min="0" id="rateEur"> 元</label><span class="fh" style="margin:0">（原檔：臺灣銀行 2026-10-19 即期賣出；與 AI 費用的匯率分開設定）</span></div>
+      <div class="ratebar"><span>主機用匯率：</span><span>1 美元 = <b id="rateUsdView" class="ro"></b> 元 <button type="button" class="mini" id="rateUsdGo">到「② 美元匯率」修改</button></span><label>1 歐元 = <input class="y" type="number" step="0.01" min="0" id="rateEur"> 元</label><span class="fh" style="margin:0">（美元匯率與 AI 費用共用同一個數字，只在 ② 設定一次；＋1.5% 按鈕也會套用到主機月費。歐元：臺銀 2026-10-19 即期賣出）</span></div>
       <div class="tbl-wrap"><table class="htbl" id="hostTbl"></table></div><div id="hostNotes"></div></div>
     <div class="card tab" id="tab-ups"><h2 id="upsTitle"></h2><div class="fh" id="upsSub"></div>
       <div class="note">這是什麼？<b>UPS（不斷電系統）</b>是給「自架主機」用的備用電池：停電時讓 Mac mini、路由器、數據機繼續運作幾分鐘，並透過 USB 通知 Mac 自動安全關機，避免資料損壞。只有選「自架 Mac mini」時才需要；雲端主機不用買。</div>
@@ -352,8 +353,8 @@ const UPS_TITLE="UPS 不斷電系統比較（Mac mini 2018 + 路由器 + 數據�
 const UPS_SUB="負載估算：Mac mini 2018 Apple 官方 待機 19.9W／CPU 滿載 122W；路由器＋數據機約 15–30W（估）。黃色價格可改。";
 const UPS=[{"tag": "★ 首選", "model": "CyberPower CP1000AVRLCDA", "type": "在線互動式（模擬正弦波）", "cap": "1000VA / 600W", "usb": "有（附 USB 線，HID）", "mac": "PowerPanel Personal for Mac（支援 macOS 15/26、繁中）", "run": "官方：半載 300W 約 8 分；估 100–150W 約 15–25 分（未實測）", "bat": "RB1290A，原廠保固 2 年", "price": 3290, "url": "https://24h.pchome.com.tw/prod/DCAR1D-A900A0FBE", "st": "價格、規格已查（PChome、CyberPower 官網）；續航為推估"}, {"tag": "升級選擇", "model": "CyberPower CP1000PFCLCDa", "type": "在線互動式（純正弦波、PFC 相容）", "cap": "1000VA / 600W", "usb": "有（USB）", "mac": "PowerPanel Personal for Mac", "run": "未查到官方數據，估與上款相近（未查證）", "bat": "原廠保固 2 年", "price": 4290, "url": "https://24h.pchome.com.tw/prod/DCAR1D-A900AYSX0", "st": "價格已查；續航未查證"}, {"tag": "可考慮", "model": "APC BX850M-TW（Back-UPS Pro BX）", "type": "在線互動式（模擬正弦波）", "cap": "850VA / 510W", "usb": "有（USB）", "mac": "PowerChute 只支援 Windows；macOS 可用內建 UPS 設定（待實機確認）", "run": "APC 型錄（同系列 BX850M）：119W 約 24 分、79W 約 37 分", "bat": "—", "price": 5775, "url": "https://24h.pchome.com.tw/store/DCAR1C", "st": "價格已查；Mac 相容性待確認"}, {"tag": "可考慮", "model": "Eaton 伊頓（飛瑞）5E1000LV", "type": "在線互動式（模擬正弦波）", "cap": "1000VA / 600W", "usb": "有（USB）", "mac": "未查證 macOS 支援", "run": "官方手冊未列續航（未查證）", "bat": "24V/7Ah×2", "price": 2990, "url": "https://24h.pchome.com.tw/search/?q=1kva+ups+%E5%9C%A8%E7%B7%9A", "st": "價格取自 PChome 搜尋頁（昌運賣場）；規格查 Eaton 手冊"}, {"tag": "不建議給 Mac", "model": "APC BV1000-TW / BV650-TW", "type": "在線互動式", "cap": "1000VA/600W；650VA/375W", "usb": "沒有（BV650 官方規格：相容 USB＝No）", "mac": "無法自動關機", "run": "—", "bat": "APCRBCV210（BV650）", "price": 2389, "url": "https://24h.pchome.com.tw/store/DCAR1C", "st": "價格已查；BV1000 無 USB 為依同系列推論"}, {"tag": "高規（在線式）", "model": "飛碟 FT-110H（FT-1010）1KVA", "type": "在線式（雙轉換、零切換）", "cap": "1000VA / 800W", "usb": "有（USB 監控軟體）", "mac": "未查證 macOS 支援", "run": "未查證", "bat": "—", "price": 7799, "url": "https://24h.pchome.com.tw/prod/DECE4A-A900ERNTV", "st": "價格已查（PChome 昌運）"}, {"tag": "高規（在線式）", "model": "CyberPower OLS1000A", "type": "在線式（雙轉換）", "cap": "1000VA", "usb": "有", "mac": "PowerPanel", "run": "未查證", "bat": "—", "price": 9599, "url": "https://24h.pchome.com.tw/store/DCAR1D", "st": "價格已查（PChome 昌運）"}, {"tag": "高規（在線式）", "model": "Eaton 伊頓（飛瑞）C-1000FG2", "type": "在線式", "cap": "1000VA", "usb": "有", "mac": "未查證", "run": "未查證", "bat": "—", "price": 13990, "url": "https://24h.pchome.com.tw/search/?q=ups%E4%B8%8D%E6%96%B7%E9%9B%BB%E7%B3%BB%E7%B5%B11kva", "st": "價格取自 PChome 搜尋頁"}];
 const UPS_NOTES=["別買錯牌子：「飛瑞」和「飛碟」名字很像，但是兩家不同的公司。飛瑞是國際大廠伊頓（Eaton）在台灣用的品牌，飛碟則是另一家台灣品牌，買的時候要看清楚。", "電池要定期換：不斷電系統裡的電池跟機車電池一樣，用久了會沒力。原廠說可以用 3 到 5 年，但台灣夏天很熱，電池老得比較快，建議 2 到 3 年換一次。換一顆大概 NT$800～1,500，這是預估的價錢，還沒有實際查過。", "選一般款就好：停電的時候，一般款要先切換成電池供電，中間會停頓不到一眨眼的時間，Mac mini 完全不受影響。高階款連這一下都沒有，供應的電也最穩，但比較貴、比較吵，也比較耗電，我們用不到。", "成本很低：這台不斷電系統 NT$3,290，分 3 年攤下來每月大約 NT$91。這筆錢已經算在維護費分潤前先扣掉的主機成本裡了。"];
-const HOST_DEF={usd:32.55,eur:36.7,self:500,upsPrice:3290,upsMonths:36,
-  usdNote:"臺灣銀行 2026-10-19 即期賣出 32.55",eurNote:"臺灣銀行 2026-10-19 即期賣出 36.70",
+const HOST_DEF={eur:36.7,self:500,upsPrice:3290,upsMonths:36,
+  usdNote:"與 AI 費用共用同一個美元匯率（連到『假設參數』B12；預設臺銀 2026/10/19 即期賣出 32.515）",eurNote:"臺灣銀行 2026-10-19 即期賣出 36.70",
   selfNote:"第 1 階段（0–20 戶）：本機 Mac mini + UPS + Cloudflare Tunnel + 備份 + 監控，目前自架約 NT$500／月（原檔估計值）",
   upsNote:"CyberPower CP1000AVRLCDA，PChome 2026-10-19 價；3 年（36 個月）攤提"};
 const HOST_DEFAULT_SEL=11; // AWS Lightsail Linux 8GB（原檔建議「最省事」）
@@ -361,10 +362,15 @@ const HOST_DEFAULT_SEL=11; // AWS Lightsail Linux 8GB（原檔建議「最省事
 /* ================= 狀態 ================= */
 const clone = o => JSON.parse(JSON.stringify(o));
 const today = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
-function freshState(){ return {params:clone(DEFAULTS.params),scen:clone(DEFAULTS.scen),models:clone(DEFAULTS.models),model:0,scenIdx:1,volMode:"scen",customVol:3000,client:"",qno:"",qdate:today(),ptype:"",heatCur:"TWD",log:false,hostSel:HOST_DEFAULT_SEL,hostShare:1,hostRate:{usd:HOST_DEF.usd,eur:HOST_DEF.eur}}; }
+function freshState(){ return {params:clone(DEFAULTS.params),scen:clone(DEFAULTS.scen),models:clone(DEFAULTS.models),model:0,scenIdx:1,volMode:"scen",customVol:3000,client:"",qno:"",qdate:today(),ptype:"",heatCur:"TWD",log:false,hostSel:HOST_DEFAULT_SEL,hostShare:1,hostRate:{eur:HOST_DEF.eur}}; }
 let S;
 try{ S = JSON.parse(localStorage.getItem("phoenix_quote_v1")) || freshState(); if(!S.models||S.models.length!==11||!S.params) S=freshState(); }catch(e){ S=freshState(); }
-if(S.hostSel===undefined){ S.hostSel=HOST_DEFAULT_SEL; S.hostShare=1; S.hostRate={usd:HOST_DEF.usd,eur:HOST_DEF.eur}; }
+if(S.hostSel===undefined){ S.hostSel=HOST_DEFAULT_SEL; S.hostShare=1; }
+if(!S.hostRate||typeof S.hostRate!=="object") S.hostRate={eur:HOST_DEF.eur};
+if(S.hostRate.eur===undefined) S.hostRate.eur=HOST_DEF.eur;
+// 舊版另存的「主機用美元匯率」已統一為 AI 的美元匯率（params.fx），移除舊欄位
+if("usd" in S.hostRate){ delete S.hostRate.usd; try{ localStorage.setItem("phoenix_quote_v1",JSON.stringify(S)); }catch(e){} }
+["phoenix_host_usd","phoenix_quote_host_usd","hostRateUsd"].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
 const save = () => { try{ localStorage.setItem("phoenix_quote_v1",JSON.stringify(S)); }catch(e){} };
 
 /* ================= 計算（完全依原檔公式） ================= */
@@ -398,7 +404,7 @@ function compute(){
   const q={vlo:lo,vhi:hi,aiLo:r.tot*lo*p.fx,aiHi:r.tot*hi*p.fx,pl,ph,lnLo:lineFee(pl),lnHi:lineFee(ph),plan:linePlan(ph)};
   q.subLo=q.aiLo+q.lnLo; q.subHi=q.aiHi+q.lnHi;
   // 主機：原檔公式 ROUND(月費 × IF(幣別="EUR", 歐元匯率, 美元匯率), 0)
-  const hostNT=HOSTS.map(h=>exRound(h.price*(h.cur==="EUR"?S.hostRate.eur:S.hostRate.usd)));
+  const hostNT=HOSTS.map(h=>exRound(h.price*(h.cur==="EUR"?S.hostRate.eur:p.fx)));
   const hs=S.hostSel, share=Math.max(1,+S.hostShare||1);
   q.hostFull = hs==="none" ? 0 : hs==="self" ? HOST_DEF.self : hostNT[hs];
   q.host = q.hostFull/share; q.share=share;
@@ -450,7 +456,7 @@ function render(){
    <tr><td></td><td colspan="2" style="color:#64748b">一年約（每月小計 × 12）</td><td class="n" style="color:#64748b">NT$${fmt0(q.subLo*12)}</td><td class="n" style="color:#64748b">NT$${fmt0(q.subHi*12)}</td></tr>
    <tr class="pend"><td>4</td><td><b>串接客戶現有系統</b><br><small>例如 POS、訂單、預約、會員系統（API 串接）</small></td><td>要先拿到客戶系統的串接文件（API 規格）才能評估</td><td colspan="2" class="n pending-txt">${PENDING}</td></tr>
    <tr class="excl"><td></td><td colspan="2"><b>以下費用不含在本估算，需另外報價：</b>${excludedList().join("、")}</td><td colspan="2" class="n">另計</td></tr></tbody>`;
-  $("quoteNotes").innerHTML="註：金額皆未稅。AI 使用費＝每回一則的成本 × 每月則數（美元以 1:"+num(p.fx,3)+" 換成台幣）；LINE 月費採 2026/11/1 起新價，只要都用「回覆」就是免費。"+(S.hostSel!=="none"&&S.hostSel!=="self"?"主機月費依原檔價格（2026-10-19 查證）× 主機用匯率換算，未含稅與超量流量。":"")+(S.volMode==="scen"&&S.scenIdx===5?"情境6 沒有上限，最多則數以 "+fmt0(S.scen[5].hi)+" 則估算。":"")+(p.gemAdj==="是"?"Gemini 採調價後價格。":"");
+  $("quoteNotes").innerHTML="註：金額皆未稅。AI 使用費＝每回一則的成本 × 每月則數（美元以 1:"+num(p.fx,3)+" 換成台幣）；LINE 月費採 2026/11/1 起新價，只要都用「回覆」就是免費。"+(S.hostSel!=="none"&&S.hostSel!=="self"?"主機月費依原檔價格（2026-10-19 查證）× 匯率換算（美元與 AI 費用共用 1:"+num(p.fx,3)+"），未含稅與超量流量。":"")+(S.volMode==="scen"&&S.scenIdx===5?"情境6 沒有上限，最多則數以 "+fmt0(S.scen[5].hi)+" 則估算。":"")+(p.gemAdj==="是"?"Gemini 採調價後價格。":"");
   renderPerChart(); renderScenChart(); renderDonut(); renderHeat(); renderDetail(); renderPrice(); renderLine(); renderMethod(); renderSrc(); renderHost(); renderUps();
   save();
 }
@@ -572,8 +578,9 @@ function renderHost(){
   else if(sel==="self") ind="<b>自架：</b>"+esc(HOST_DEF.selfNote)+"。需搭配 UPS 不斷電系統（每月攤提約 NT$"+fmt0(HOST_DEF.upsPrice/HOST_DEF.upsMonths)+"，已含在主機成本內），詳見「UPS 不斷電系統」分頁。";
   else { const h=HOSTS[sel]; ind=`<b>${esc(h.loc)}</b>｜回應速度 ${esc(h.lat)}｜設定難度 ${esc(h.diff)}｜中文：${esc(h.zh)}<br>👍 ${esc(h.pro)}　👎 ${esc(h.con)}`; }
   $("hostInd").innerHTML=ind;
+  $("rateUsdView").textContent=num(S.params.fx,3);
   $("hostTitle").textContent=HOST_TITLE.replace("，黃色可改","");
-  $("hostSub").textContent=HOST_SUB.replace("會自動用「假設」頁對應匯率換算","依下方主機用匯率自動換算");
+  $("hostSub").textContent=HOST_SUB.replace("會自動用「假設」頁對應匯率換算","依下方匯率自動換算（美元與 AI 費用共用同一個匯率）");
   let h=`<thead><tr><th>選用</th><th>供應商</th><th>方案（規格）</th><th class="n">CPU</th><th class="n">記憶體 GB</th><th>離台灣最近機房</th><th>幣別</th><th class="n">月費（原幣）</th><th class="n">月費 NT$</th><th>回應速度（估）</th><th>設定難度</th><th>中文支援</th><th>優點</th><th>缺點</th><th>查證狀態</th></tr></thead><tbody>`;
   HOSTS.forEach((x,i)=>{ const on=String(sel)===String(i); h+=`<tr data-h="${i}" class="${on?"sel":""}"><td class="pick">${on?"✅ 已選":"選這台"}</td><td><b>${esc(x.p)}</b></td><td>${esc(x.plan)}</td><td class="n">${x.cpu??"—"}</td><td class="n">${x.ram??"—"}</td><td>${esc(x.loc)}</td><td>${x.cur}</td><td class="n">${x.cur==="EUR"?"€":"US$"}${num(x.price,2)}</td><td class="n"><b>NT$${fmt0(C.hostNT[i])}</b></td><td>${esc(x.lat)}</td><td>${esc(x.diff)}</td><td>${esc(x.zh)}</td><td>${esc(x.pro)}</td><td>${esc(x.con)}</td><td><a href="${x.url}" target="_blank" rel="noopener">官方價格</a>｜${esc(x.st)}</td></tr>`; });
   $("hostTbl").innerHTML=h+"</tbody>";
@@ -602,8 +609,8 @@ function bindInputs(){
   C=C||compute(); hostOptions();
   $("hostSel").onchange=e=>{ const v=e.target.value; S.hostSel=(v==="none"||v==="self")?v:+v; render(); };
   $("hostShare").value=S.hostShare; $("hostShare").oninput=e=>{ S.hostShare=Math.max(1,Math.round(+e.target.value||1)); render(); };
-  $("rateUsd").value=S.hostRate.usd; $("rateEur").value=S.hostRate.eur;
-  $("rateUsd").oninput=e=>{ S.hostRate.usd=+e.target.value||0; render(); };
+  $("rateEur").value=S.hostRate.eur;
+  $("rateUsdGo").onclick=()=>{ const el=document.querySelector('[data-p="fx"]'); el.scrollIntoView({behavior:"smooth",block:"center"}); setTimeout(()=>el.focus(),300); };
   $("rateEur").oninput=e=>{ S.hostRate.eur=+e.target.value||0; render(); };
 }
 document.addEventListener("click",e=>{
@@ -692,7 +699,7 @@ function sheetQuote(wb,c){
   EXL.forEach((t,i)=>{ const R=17+i; s.set("A"+R,"•",ctr); s.set("B"+R,t,ST.cell); s.set("C"+R,"",ST.cell); s.merge(`B${R}:C${R}`); s.set("D"+R,"另計",ctr); s.set("E"+R,"",ST.cell); s.merge(`D${R}:E${R}`); });
   const nr=17+EXL.length+1;
   s.set("A"+nr,"備註",ST.h2);
-  const notes=["1. 金額皆為新台幣、未稅。","2. AI 使用費＝AI 每回一則的成本 × 每月回覆則數；AI 以美元計價，依 1 美元＝"+num(p.fx,3)+" 元台幣換算。修改『假設參數』工作表的黃色欄位會自動重算。","3. 客人傳訊息、機器人回覆是免費的；只有店家主動傳訊息（通知、提醒、補傳）才會扣 LINE 則數（LINE 價格採 2026/11/1 起新價）。",(scenMode&&k===5?"4. 情境6 沒有上限，最多則數以 "+txt0(S.scen[5].hi)+" 則估算。":"4. 每月則數是估算範圍，實際依好友人數與客人互動多寡而定。"),"5. 串接客戶現有系統的費用，需等客戶提供系統串接文件（API 規格）後另行報價。","6. 價格與匯率以 2026-10-19 查核為準，各廠商可能隨時調整。","7. 主機月費依『雲端主機比較』原幣月費 × 『假設』頁匯率（美元 B22、歐元 B23）換算並四捨五入；為估計值，未含稅、硬碟與超量流量。","名詞小辭典：token＝AI 計算字量的單位，1 個中文字約 1.2 token；API＝讓兩個系統互相連接、交換資料的介面。"];
+  const notes=["1. 金額皆為新台幣、未稅。","2. AI 使用費＝AI 每回一則的成本 × 每月回覆則數；AI 以美元計價，依 1 美元＝"+num(p.fx,3)+" 元台幣換算。修改『假設參數』工作表的黃色欄位會自動重算。","3. 客人傳訊息、機器人回覆是免費的；只有店家主動傳訊息（通知、提醒、補傳）才會扣 LINE 則數（LINE 價格採 2026/11/1 起新價）。",(scenMode&&k===5?"4. 情境6 沒有上限，最多則數以 "+txt0(S.scen[5].hi)+" 則估算。":"4. 每月則數是估算範圍，實際依好友人數與客人互動多寡而定。"),"5. 串接客戶現有系統的費用，需等客戶提供系統串接文件（API 規格）後另行報價。","6. 價格與匯率以 2026-10-19 查核為準，各廠商可能隨時調整。","7. 主機月費依『雲端主機比較』原幣月費 × 匯率換算（美元＝『假設參數』B12，與 AI 費用共用同一個匯率；歐元＝『假設』B23）並四捨五入；為估計值，未含稅、硬碟與超量流量。","名詞小辭典：token＝AI 計算字量的單位，1 個中文字約 1.2 token；API＝讓兩個系統互相連接、交換資料的介面。"];
   const rows=[]; rows[0]={hpt:26};
   notes.forEach((t,i)=>{ const R=nr+1+i; s.set("A"+R,t,ST.note); s.merge(`A${R}:F${R}`); rows[R-1]={hpt:30}; });
   wb.SheetNames.push("報價單"); wb.Sheets["報價單"]=s.out([12,36,40,20,20,28,12,16],rows);
@@ -841,11 +848,11 @@ function sheetHostAssump(wb){
   const rows=[[16,"第 1 階段主機月成本（自架）",HOST_DEF.self,"目前自架約 NT$500／月（0–20 戶：本機 Mac mini + UPS + Cloudflare Tunnel + 備份 + 監控）","NT$#,##0"],
     [20,"UPS 購買價",HOST_DEF.upsPrice,"CyberPower CP1000AVRLCDA，PChome 2026-10-19 價","NT$#,##0"],
     [21,"UPS 攤提月數",HOST_DEF.upsMonths,"3 年攤提","0"],
-    [22,"美元匯率（TWD/USD）",S.hostRate.usd,HOST_DEF.usdNote,"0.00"],
+    [22,"美元匯率（TWD/USD）",S.params.fx,HOST_DEF.usdNote,"0.000"],
     [23,"歐元匯率（TWD/EUR）",S.hostRate.eur,HOST_DEF.eurNote,"0.00"]];
-  rows.forEach(([R,a,v,n,z])=>{ s.set("A"+R,a,ST.cell); s.set("B"+R,v,Y,null,z); s.set("C"+R,n,ST.cell); });
+  rows.forEach(([R,a,v,n,z])=>{ s.set("A"+R,a,ST.cell); if(R===22) s.set("B"+R,v,mix(ST.cell,fillOf(COLORS.green),{font:{bold:true}}),P_+"$B$12",z); else s.set("B"+R,v,Y,null,z); s.set("C"+R,n,ST.cell); });
   s.set("A25","UPS 每月攤提（自動）",ST.cell); s.set("B25",HOST_DEF.upsPrice/HOST_DEF.upsMonths,mix(ST.cell,fillOf(COLORS.green),{font:{bold:true}}),"B20/B21","NT$#,##0"); s.set("C25","= UPS 購買價 ÷ 攤提月數（已含在自架主機成本內）",ST.cell);
-  s.set("A27","註：主機成本與匯率皆為估計值，不是實測；AI 費用的匯率另見『假設參數』B12。",ST.note);
+  s.set("A27","註：主機成本與匯率皆為估計值，不是實測。B22 美元匯率自動連到『假設參數』B12（與 AI 費用共用同一個數字），請改 B12。",ST.note);
   wb.SheetNames.push("假設"); wb.Sheets["假設"]=s.out([30,14,80]);
 }
 function sheetHosts(wb,c){
@@ -855,7 +862,7 @@ function sheetHosts(wb,c){
   HOSTS.forEach((h,i)=>{ const R=5+i, on=String(sel)===String(i), base=on?mix(ST.cell,fillOf(COLORS.green)):ST.cell;
     s.set("A"+R,h.p+(on?"（本報價選用）":""),mix(base,{font:{bold:true}})); s.set("B"+R,h.plan,base); s.set("C"+R,h.cpu??"",base); s.set("D"+R,h.ram??"",base); s.set("E"+R,h.loc,base); s.set("F"+R,h.cur,base);
     s.set("G"+R,h.price,Y,null,h.cur==="EUR"?'"€"#,##0.00':'"US$"#,##0.00');
-    s.set("H"+R,c.hostNT[i],mix(base,{font:{bold:true}}),`ROUND(G${R}*IF(F${R}="EUR",'假設'!$B$23,'假設'!$B$22),0)`,'"NT$"#,##0');
+    s.set("H"+R,c.hostNT[i],mix(base,{font:{bold:true}}),`ROUND(G${R}*IF(F${R}="EUR",'假設'!$B$23,${P_}$B$12),0)`,'"NT$"#,##0');
     s.set("I"+R,h.lat,base); s.set("J"+R,h.diff,base); s.set("K"+R,h.zh,base); s.set("L"+R,h.pro,base); s.set("M"+R,h.con,base);
     s.set("N"+R,h.url,mix(base,{font:{sz:10,color:{rgb:COLORS.link},underline:true}})); s.c["N"+R].l={Target:h.url}; s.set("O"+R,h.st,base); });
   HOST_NOTES.forEach((t,i)=>{ s.set("A"+(21+i),t,ST.wrap); s.merge(`A${21+i}:O${21+i}`); });
