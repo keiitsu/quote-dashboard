@@ -25,7 +25,7 @@ input[type=text]{width:100%;padding:7px;border:1px solid #cfd8e3;border-radius:6
 <div class="card" id="addbox" style="margin-top:10px"><h2>③ 加購功能（進階版才能加，可複選）</h2><div id="adds"></div></div>
 </div><div class="side card"><h2>④ 費用與報價單</h2>
 <div class="tot"><div><small>建置費最低</small><b id="tmin"></b></div><div><small>建置費最高</small><b id="tmax"></b></div><div><small>工作天</small><b id="tday" style="font-size:13px"></b></div></div>
-<p id="capn" style="display:none;margin:0 0 8px;color:#067647;font-weight:600;font-size:13px">已達封頂價 NT$8,000，超過部分不另收費</p><input type="text" id="cn" placeholder="輸入客戶名稱（例如：王小明咖啡）"><div id="pv"></div>
+<p id="capn" style="display:none;margin:0 0 8px;color:#067647;font-weight:600;font-size:13px">已達封頂價 NT$8,000，超過部分不另收費</p><p id="dcapn" style="display:none;margin:0 0 8px;color:#067647;font-weight:600;font-size:13px">工作天數最多 21 天</p><input type="text" id="cn" placeholder="輸入客戶名稱（例如：王小明咖啡）"><div id="pv"></div>
 <div class="btns"><button id="xl">匯出 Excel</button><button id="rs">清除加購</button></div></div></div>
 <script>
 /*! xlsx-js-style (SheetJS 0.18.5 + styles) — Apache-2.0, embedded for offline use */
@@ -54,7 +54,7 @@ D:{name:"D 會員",who:"實體門市想經營熟客：集點、優惠券、會�
  adv:[["共用正式環境","測試／正式分開、備份還原，整案一次",[1,3],[1000,1500]],["會員登入與 LINE 綁定","接上現有會員登入或簡訊驗證",[3,5],[1500,2000]],["店員與客服工作台","店員／主管角色，核銷、回覆、結案",[3,5],[1500,2000]],["連接收銀機","接一家收銀機，消費退款自動同步",[3,7],[1500,2000]],["點數規則與退款扣回","一套計點規則，不重複給點",[3,5],[1500,2000]],["會員優惠券與核銷","最多 3 種優惠券，不能重複用",[3,5],[1500,2000]]],
  add:[["活動管理後台","自己維護門市與優惠券規則",[3,6],[1200,1500]],["生日／到期／回購提醒","最多 3 種自動提醒",[5,8],[1000,2000]],["自動分群貼標籤","依消費分最多 5 群",[1,3],[600,1000]],["回購與兌換報表","最多 6 個指標，可匯出",[1,3],[600,1000]],["多店權限","擴充到 3 家門市",[3,8],[1000,1500]],["同步客戶名單系統","接一套外部客戶名單",[3,6],[1200,1500]],["點數折抵消費","點數可折抵，失敗自動退回",[5,8],[1000,2000]],["會員等級","最多 3 個等級自動升降",[14,17],[3000,4000]],["大量資料擴充","會員很多時的擴充與封存",[14,17],[3000,4000]],["收銀機自動對帳","每天自動對收銀機日結",[14,17],[3000,4000]],["優惠券收銀機自動折抵","收銀機確認成功才算",[1,3],[600,1000]],["LINE 內建分段訊息","一條 3 步驟自動訊息",[3,6],[1200,1500]],["LINE 加值模組與分群選單","最多 2 模組、2 種選單",[1,3],[600,1000]],["門市感應入口","手機一碰就開的入口，最多 2 個",[1,3],[600,1000]],["加好友廣告初次設定","一檔活動；廣告費另計",[3,6],[1200,1500]],["LINE 開店幫手","最多 10 項商品、一組付款配送",[3,6],[1200,1500]],["LINE 再行銷名單","最多 3 個名單",[3,6],[1200,1500]],["現成會員服務開通","開通一套現成會員軟體",[3,6],[1200,1500]]]}
 };
-const CAP=8000,CAPNOTE="已達封頂價 NT$8,000，超過部分不另收費";const cap=n=>Math.min(n,CAP);
+const CAP=8000,CAPNOTE="已達封頂價 NT$8,000，超過部分不另收費";const cap=n=>Math.min(n,CAP);const DCAP=21,DNOTE="工作天數最多 21 天",dc=n=>Math.min(n,DCAP);
 const NOTE="串接店家既有系統：待業主提供 API 規格後計算";
 let st={t:"A",v:"basic",sel:{}};
 const $=s=>document.querySelector(s), nt=n=>"NT$"+n.toLocaleString("en-US");
@@ -75,18 +75,18 @@ function render(){const t=T[st.t];
  $("#adds").innerHTML=t.add.map((a,i)=>`<label class=ad><input type=checkbox data-i=${i} ${st.sel[st.t+i]?"checked":""}><span><b>${a[0]}</b><small>${a[1]}</small></span><span class=m>${a[2][0]}~${a[2][1]} 日<br>${a[3]?rng(a[3][0],a[3][1],nt):"另行報價"}</span></label>`).join("");
  document.querySelectorAll("#adds input").forEach(c=>c.onchange=()=>{st.sel[st.t+c.dataset.i]=c.checked;render()});
  const L=lines(),s=tot(L);
- const over=s[3]>CAP;$("#tmin").textContent=nt(cap(s[2]));$("#tmax").textContent=nt(cap(s[3]));$("#capn").style.display=over?"":"none";$("#tday").textContent=s[0]+" ~ "+s[1]+" 個工作天";
+ const over=s[3]>CAP;$("#tmin").textContent=nt(cap(s[2]));$("#tmax").textContent=nt(cap(s[3]));$("#capn").style.display=over?"":"none";const dov=s[1]>DCAP;$("#tday").textContent=dc(s[0])+" ~ "+dc(s[1])+" 個工作天";$("#dcapn").style.display=dov?"":"none";
  const cn=$("#cn").value.trim()||"（客戶名稱）";
  $("#pv").innerHTML=`<div class=ph><b>報價單</b><span>${cn}</span></div><div class=pm>${t.name}・${st.v==="adv"?"進階版":"基礎版"}｜日期 ${new Date().toLocaleDateString("zh-TW")}</div>
  <table><tr><th>項目</th><th>工作天</th><th>費用（未稅）</th></tr>${L.map(l=>`<tr><td>${l[0]}</td><td>${l[2][0]}~${l[2][1]}</td><td>${l[3]?rng(l[3][0],l[3][1],nt):"另行報價"}</td></tr>`).join("")}
- ${over?`<tr><td>原價小計</td><td></td><td>${rng(s[2],s[3],nt)}</td></tr><tr><td>封頂折抵</td><td></td><td>-${rng(s[2]-cap(s[2]),s[3]-cap(s[3]),nt)}</td></tr>`:""}<tr class=tt><td>合計</td><td>${s[0]}~${s[1]}</td><td>${rng(cap(s[2]),cap(s[3]),nt)}</td></tr></table>${over?`<p class=fx style="background:#ecfdf3;border-color:#12b76a">${CAPNOTE}</p>`:""}
+ ${over?`<tr><td>原價小計</td><td></td><td>${rng(s[2],s[3],nt)}</td></tr><tr><td>封頂折抵</td><td></td><td>-${rng(s[2]-cap(s[2]),s[3]-cap(s[3]),nt)}</td></tr>`:""}<tr class=tt><td>合計</td><td>${dc(s[0])}~${dc(s[1])}</td><td>${rng(cap(s[2]),cap(s[3]),nt)}</td></tr></table>${over?`<p class=fx style="background:#ecfdf3;border-color:#12b76a">${CAPNOTE}</p>`:""}${dov?`<p class=fx style="background:#ecfdf3;border-color:#12b76a">${DNOTE}（各項天數加總為 ${s[0]}~${s[1]} 天）</p>`:""}
  <p class=fx>${NOTE}</p><p class=sm>金額皆為新台幣未稅。工作天不含假日與等待素材、確認、審核的時間。LINE 月費、主機、金流手續費等另計。</p>`;}
 function xport(){const t=T[st.t],L=lines(),s=tot(L),cn=$("#cn").value.trim();
  const H={font:{bold:true,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:"1F4E79"}},alignment:{wrapText:true,vertical:"center"}};
  const W={alignment:{wrapText:true,vertical:"top"}};
  const q=[["報價單"],["客戶名稱",cn],["方案",t.name+"・"+(st.v==="adv"?"進階版":"基礎版")],["日期",new Date().toLocaleDateString("zh-TW")],[],["項目","說明","工作天（最少）","工作天（最多）","費用最低（NT$ 未稅）","費用最高（NT$ 未稅）"]];
  L.forEach(l=>q.push([l[0],l[1],l[2][0],l[2][1],l[3]?l[3][0]:"另行報價",l[3]?l[3][1]:"另行報價"]));
- if(s[3]>CAP)q.push(["封頂折抵",CAPNOTE,"","",cap(s[2])-s[2],cap(s[3])-s[3]]);const n=q.length;q.push(["合計（封頂 NT$8,000）","",{f:`SUM(C7:C${n})`,v:s[0]},{f:`SUM(D7:D${n})`,v:s[1]},{f:`SUM(E7:E${n})`,v:cap(s[2])},{f:`SUM(F7:F${n})`,v:cap(s[3])}],[],[NOTE],["金額皆為新台幣未稅；工作天不含假日與等待時間。"]);
+ if(s[3]>CAP)q.push(["封頂折抵",CAPNOTE,"","",cap(s[2])-s[2],cap(s[3])-s[3]]);const n=q.length;q.push(["合計（封頂 NT$8,000）","",{f:`MIN(SUM(C7:C${n}),21)`,v:dc(s[0])},{f:`MIN(SUM(D7:D${n}),21)`,v:dc(s[1])},{f:`SUM(E7:E${n})`,v:cap(s[2])},{f:`SUM(F7:F${n})`,v:cap(s[3])}],[],...(s[1]>DCAP?[[DNOTE+"（各項天數加總為 "+s[0]+"~"+s[1]+" 天）"]]:[]),[NOTE],["金額皆為新台幣未稅；工作天不含假日與等待時間。"]);
  const ws=XLSX.utils.aoa_to_sheet(q);ws["!cols"]=[{wch:24},{wch:40},{wch:10},{wch:10},{wch:16},{wch:16}];
  for(const k in ws){if(k[0]==="!")continue;const r=XLSX.utils.decode_cell(k).r;ws[k].s=r===5?H:W;if(r>=6&&r<=n+1&&/[EF]/.test(k[0])&&typeof ws[k].v==="number")ws[k].z="#,##0";}
  ws.A1.s={font:{bold:true,sz:14}};ws["!freeze"]={xSplit:0,ySplit:6};ws["!views"]=[{state:"frozen",ySplit:6}];
@@ -94,7 +94,7 @@ function xport(){const t=T[st.t],L=lines(),s=tot(L),cn=$("#cn").value.trim();
  for(const k in T){const x=T[k];p.push([x.name,"基礎版","基礎版整包",x.basic.join("、"),"4~7",nt(3850)]);
   p.push([x.name,"進階版","進階版整包（含基礎版）",x.adv.map(a=>a[0]).join("、"),"6~9",rng(ADV[k][0],ADV[k][1],nt)]);x.adv.forEach(a=>p.push([x.name,"進階版內容",a[0],a[1],"","含在進階版整包"]));
   x.add.forEach(a=>p.push([x.name,"選配",a[0],a[1],a[2].join("~"),a[3]?rng(a[3][0],a[3][1],nt):"另行報價"]));}
- p.push([],[NOTE],["建置費（含加購）合計最高 NT$8,000，超過部分不另收費"]);
+ p.push([],[NOTE],["工作天數最多 21 天"],["建置費（含加購）合計最高 NT$8,000，超過部分不另收費"]);
  const w2=XLSX.utils.aoa_to_sheet(p);w2["!cols"]=[{wch:12},{wch:12},{wch:22},{wch:44},{wch:8},{wch:18}];
  for(const k in w2){if(k[0]==="!")continue;w2[k].s=XLSX.utils.decode_cell(k).r===0?H:W;}w2["!views"]=[{state:"frozen",ySplit:1}];
  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"報價單");XLSX.utils.book_append_sheet(wb,w2,"價目表");
