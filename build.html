@@ -35,7 +35,7 @@ var XLSX={};function make_xlsx_lib(a){a.version="0.18.5",a.style_version="1.2.0"
 
 </script>
 <script>"use strict";
-const BASIC={fee:[3850,3850],days:[4,7]};
+const BASIC={fee:[3850,3850],days:[4,7]};const ADV={A:[6000,8000],B:[6000,6000],C:[6000,8000],D:[6000,8000]},ADVD=[6,9];
 const T={
 A:{name:"A 電商零售",who:"網拍、零售店，想在 LINE 介紹商品、帶客人去購物網站",
  basic:["店家資訊、歡迎訊息","10 組常見問題自動回覆","六格選單，連到你的購物網站","優惠券、集點卡、問卷、群發草稿","手機實測、操作手冊、一次修正"],
@@ -58,8 +58,8 @@ const NOTE="串接店家既有系統：待業主提供 API 規格後計算";
 let st={t:"A",v:"basic",sel:{}};
 const $=s=>document.querySelector(s), nt=n=>"NT$"+n.toLocaleString("en-US");
 const rng=(a,b,f)=>a===b?f(a):f(a)+" ~ "+f(b).replace("NT$","");
-function lines(){const t=T[st.t],L=[["基礎版（整包）","基礎版全部內容",BASIC.days,BASIC.fee]];
- if(st.v==="adv"){t.adv.forEach(a=>L.push(["進階："+a[0],a[1],a[2],a[3]]));
+function lines(){const t=T[st.t],L=st.v==="adv"?[["進階版（整包，已含基礎版）","包含："+t.adv.map(a=>a[0]).join("、"),ADVD,ADV[st.t]]]:[["基礎版（整包）","基礎版全部內容",BASIC.days,BASIC.fee]];
+ if(st.v==="adv"){
   t.add.forEach((a,i)=>{if(st.sel[st.t+i])L.push(["選配："+a[0],a[1],a[2],a[3]])});}
  return L;}
 function tot(L){let s=[0,0,0,0];L.forEach(l=>{s[0]+=l[2][0];s[1]+=l[2][1];if(l[3]){s[2]+=l[3][0];s[3]+=l[3][1]}});return s;}
@@ -68,7 +68,7 @@ function render(){const t=T[st.t];
  document.querySelectorAll(".ver").forEach(b=>b.classList.toggle("on",b.dataset.v===st.v));
  $("#who").textContent="適合："+t.who;
  let h="<b>基礎版包含</b><ul>"+t.basic.map(x=>"<li>"+x+"</li>").join("")+"</ul>";
- if(st.v==="adv")h+="<b>進階版再加（包含基礎版）</b><ul>"+t.adv.map(a=>`<li>${a[0]}：${a[1]}<span class=m>${a[2][0]}~${a[2][1]} 日｜${rng(a[3][0],a[3][1],nt)}</span></li>`).join("")+"</ul>";
+ if(st.v==="adv")h+=`<b>進階版整包 ${rng(ADV[st.t][0],ADV[st.t][1],nt)}（已含基礎版，以下都包含在內）</b><ul>`+t.adv.map(a=>`<li>${a[0]}：${a[1]}</li>`).join("")+"</ul>";
  $("#inc").innerHTML=h;
  $("#addbox").style.display=st.v==="adv"?"":"none";
  $("#adds").innerHTML=t.add.map((a,i)=>`<label class=ad><input type=checkbox data-i=${i} ${st.sel[st.t+i]?"checked":""}><span><b>${a[0]}</b><small>${a[1]}</small></span><span class=m>${a[2][0]}~${a[2][1]} 日<br>${a[3]?rng(a[3][0],a[3][1],nt):"另行報價"}</span></label>`).join("");
@@ -91,7 +91,7 @@ function xport(){const t=T[st.t],L=lines(),s=tot(L),cn=$("#cn").value.trim();
  ws.A1.s={font:{bold:true,sz:14}};ws["!freeze"]={xSplit:0,ySplit:6};ws["!views"]=[{state:"frozen",ySplit:6}];
  const p=[["類型","分類","項目","說明","工作天","費用（NT$ 未稅）"]];
  for(const k in T){const x=T[k];p.push([x.name,"基礎版","基礎版整包",x.basic.join("、"),"4~7",nt(3850)]);
-  x.adv.forEach(a=>p.push([x.name,"進階版階段",a[0],a[1],a[2].join("~"),rng(a[3][0],a[3][1],nt)]));
+  p.push([x.name,"進階版","進階版整包（含基礎版）",x.adv.map(a=>a[0]).join("、"),"6~9",rng(ADV[k][0],ADV[k][1],nt)]);x.adv.forEach(a=>p.push([x.name,"進階版內容",a[0],a[1],"","含在進階版整包"]));
   x.add.forEach(a=>p.push([x.name,"選配",a[0],a[1],a[2].join("~"),a[3]?rng(a[3][0],a[3][1],nt):"另行報價"]));}
  p.push([],[NOTE]);
  const w2=XLSX.utils.aoa_to_sheet(p);w2["!cols"]=[{wch:12},{wch:12},{wch:22},{wch:44},{wch:8},{wch:18}];
